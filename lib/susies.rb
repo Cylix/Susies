@@ -27,18 +27,18 @@ class Susies
 	# @endWeek      End of week                            Default: end of current week
 	##
 	def initialize(data={})
-		@login        = data[:login]       || DEFAULT_LOGIN
-		@maxStudent   = data[:maxStudent]  || DEFAULT_MAX_STUDENT
-		@autologinURL = data[:autologinURL]
+		@login        = data[:login]       	|| DEFAULT_LOGIN
+		@maxStudent   = data[:maxStudent]  	|| DEFAULT_MAX_STUDENT
+		@autologinURL = data[:autologinURL] || DEFAULT_AUTOLOGIN_URL
 
-		@mailServer   = data[:mailServer]
-		@mailPort     = data[:mailPort]
-		@mailUname    = data[:mailUname]
-		@mailPasswd   = data[:mailPasswd]
-		@mailTargets  = data[:mailTargets] || @mailUname
+		@mailServer   = data[:mailServer]		|| DEFAULT_MAIL_SERVER
+		@mailPort     = data[:mailPort]			|| DEFAULT_MAIL_PORT
+		@mailUname    = data[:mailUname]		|| DEFAULT_MAIL_UNAME
+		@mailPasswd   = data[:mailPasswd]  	|| DEFAULT_MAIL_PASSWD
+		@mailTargets  = data[:mailTargets] 	|| [@mailUname]
 
-		@startWeek    = Date.today.beginning_of_week
-		@endWeek      = Date.today.end_of_week
+		@startWeek    = DEFAULT_START_WEEK
+		@endWeek      = DEFAULT_END_WEEK
 	end
 
 

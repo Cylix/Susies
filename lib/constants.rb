@@ -1,8 +1,24 @@
+require 'active_support/time'
+
 class Susies
   # Susie login
   DEFAULT_LOGIN         = "clark_s"
   # Maximum already registered students
   DEFAULT_MAX_STUDENT   = 9
+  # Default Autologin
+  DEFAULT_AUTOLOGIN_URL = ''
+  # Default mail server
+  DEFAULT_MAIL_SERVER   = ''
+  # Default mail port
+  DEFAULT_MAIL_PORT     = 0
+  # Default mail user name
+  DEFAULT_MAIL_UNAME    = ''
+  # Default mail password
+  DEFAULT_MAIL_PASSWD   = ''
+  # default start week
+  DEFAULT_START_WEEK    = Date.today.beginning_of_week
+  # default end week
+  DEFAULT_END_WEEK      = Date.today.end_of_week
 
   # Susie JSON API
   SUSIES_URL            = "https://intra.epitech.eu/planning/587/events"
