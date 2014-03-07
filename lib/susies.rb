@@ -133,21 +133,21 @@ class Susies
 	##
 	def getRegisterMail(susie)
 		<<-MESSAGE
-		Hey,
+Hey,
 
-		I've just registered to a susie class with #{ susie[MAKER_JSON][MAKER_LOGIN_JSON] }.
+I've just registered to a susie class with #{ susie[MAKER_JSON][MAKER_LOGIN_JSON] }.
 
-		Title:        #{ susie[TITLE_JSON] }
-		Type:         #{ susie[TYPE_JSON] }
+Title:        #{ susie[TITLE_JSON] }
+Type:         #{ susie[TYPE_JSON] }
 
-		Description:
-			#{ susie[DESC_JSON] }
+Description:
+	#{ susie[DESC_JSON] }
 
-		Start:        #{ susie[START_JSON] }.
-		End:          #{ susie[END_JSON] }.
-		Place left:   #{ 9 - susie[REGISTERED_JSON] }.
+Start:        #{ susie[START_JSON] }.
+End:          #{ susie[END_JSON] }.
+Place left:   #{ 9 - susie[REGISTERED_JSON] }.
 
-		Register here: #{ REGISTER_URL }/#{ susie[ID_JSON] }.
+Register here: #{ REGISTER_URL }/#{ susie[ID_JSON] }.
 
 		MESSAGE
 	end

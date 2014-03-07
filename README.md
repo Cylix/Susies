@@ -13,8 +13,6 @@ It's a simple piece of code allowing students to easily find and register to a S
 
 ## Enhancements
 
-## Tests
-
 ## Doc
 
 You can generate documentation by executing: `sdoc`
