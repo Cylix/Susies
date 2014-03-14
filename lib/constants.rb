@@ -20,6 +20,7 @@ class Susies
   # default end week
   DEFAULT_END_WEEK      = Date.today.end_of_week
 
+
   # Susie JSON API
   SUSIES_URL            = "https://intra.epitech.eu/planning/587/events"
   # Susie Register link
@@ -28,6 +29,8 @@ class Susies
 
   # Cookie File
   COOKIE_FILE           = "cookies.txt"
+  # Buddies Cookie File
+  BUDDIES_COOKIE_FILE   = "buddies_cookies.txt"
 
 
   # Encapsulation

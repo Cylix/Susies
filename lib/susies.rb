@@ -23,22 +23,26 @@ class Susies
 	# @mailPasswd   Mail Password                          No default
 	# @mailTargets  People to inform by mail about sub.    Default: @mailUname
 	#
+	# @buddiesAuto. Buddies autologins 										 No default
+	#
 	# @startWeek    Beginning of week                      Default: beginning of current week
 	# @endWeek      End of week                            Default: end of current week
 	##
 	def initialize(data={})
-		@login        = data[:login]       	|| DEFAULT_LOGIN
-		@maxStudent   = data[:maxStudent]  	|| DEFAULT_MAX_STUDENT
-		@autologinURL = data[:autologinURL] || DEFAULT_AUTOLOGIN_URL
+		@login        			= data[:login]       				|| DEFAULT_LOGIN
+		@maxStudent   			= data[:maxStudent]  				|| DEFAULT_MAX_STUDENT
+		@autologinURL 			= data[:autologinURL] 			|| DEFAULT_AUTOLOGIN_URL
 
-		@mailServer   = data[:mailServer]		|| DEFAULT_MAIL_SERVER
-		@mailPort     = data[:mailPort]			|| DEFAULT_MAIL_PORT
-		@mailUname    = data[:mailUname]		|| DEFAULT_MAIL_UNAME
-		@mailPasswd   = data[:mailPasswd]  	|| DEFAULT_MAIL_PASSWD
-		@mailTargets  = data[:mailTargets] 	|| [@mailUname]
+		@mailServer   			= data[:mailServer]					|| DEFAULT_MAIL_SERVER
+		@mailPort     			= data[:mailPort]						|| DEFAULT_MAIL_PORT
+		@mailUname    			= data[:mailUname]					|| DEFAULT_MAIL_UNAME
+		@mailPasswd   			= data[:mailPasswd]  				|| DEFAULT_MAIL_PASSWD
+		@mailTargets  			= data[:mailTargets] 				|| [@mailUname]
 
-		@startWeek    = DEFAULT_START_WEEK
-		@endWeek      = DEFAULT_END_WEEK
+		@buddiesAutologins 	= data[:buddiesAutologins] 	|| []
+
+		@startWeek    			= DEFAULT_START_WEEK
+		@endWeek      			= DEFAULT_END_WEEK
 	end
 
 
@@ -82,8 +86,9 @@ class Susies
 
 		susiesData[BASE_JSON].each do |susie|
 			if matchCriterias? susie
-				registerSusie susie
-				informBuddies susie
+				registerSusie 	susie, COOKIE_FILE
+				registerBuddies	susie
+				informBuddies 	susie
 				
 				return true
 			end
@@ -210,12 +215,24 @@ Register here: #{ REGISTER_URL }/#{ susie[ID_JSON] }.
 
 
 	##
+	# registerBuddies
+	#
+	# register buddies with given autologins
+	##
+	def registerBuddies(susie)
+		@buddiesAutologins.each do |autologin|
+			registerSusie susie, BUDDIES_COOKIE_FILE
+		end
+	end
+
+
+	##
 	# registerSusie
 	#
 	# register to given SusieClass
 	##
-	def registerSusie(susie)
-		`curl -s -b #{ COOKIE_FILE } -L -X POST #{ REGISTER_URL }/#{ susie[ID_JSON] }/subscribe?format=json`
+	def registerSusie(susie, cookie_file)
+		`curl -s -b #{ cookie_file } -L -X POST #{ REGISTER_URL }/#{ susie[ID_JSON] }/subscribe?format=json`
 		log "Succesfully registered to susie class."
 	end
 
