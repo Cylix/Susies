@@ -2,9 +2,9 @@
 
 ## Description
 
-Susies est une gem destinée au étudiant d'Epitech.
+Susies est une gem destinée aux étudiants d'Epitech.
 
-Elle permet de trouver simplement une susie en fonctions de quelques critères.
+Elle permet de trouver simplement une susie en fonction de quelques critères.
 
 
 ## Installation
@@ -36,90 +36,72 @@ data = {
 Susies.new( data ).check!
 ```
 
-La gem se connectera alors à l'intra pour vérifier l'existence d'une susie correspond à vos critères durant une semaine où vous n'avez pas encore de susie.
+La gem se connectera alors à l'intra pour vérifier l'existence d'une susie correspondant à vos critères, durant une semaine où vous n'avez pas encore de susie.
 
-Si elle trouve une susie, elle vous inscrira à la susie, inscrira vos amis et préviendra tout le monde par mail.
+Si elle trouve une susie, elle vous y inscrira, inscrira vos amis et préviendra tout le monde par mail.
 
 
 ### login
 
-Les logins des susies recherchées.
-
-Type: Array
-
-Default: ['clark_s']
+* Les logins des susies recherchées.
+* Type: Array
+* Default: ['clark_s']
 
 
 ### maxStudent
 
-Nombre d'étudiants déjà inscrit à la susie class (0: personne d'inscrit, 10: plus de places)
-
-Type: int
-
-Default: 9
+* Nombre d'étudiants déjà inscrit à la susie class (0: personne d'inscrit, 10: plus de places)
+* Type: int
+* Default: 9
 
 
 ### minHour
 
-Heure minimum du début de la susie class.
-
-Type: Int
-
-Default: 17
+* Heure minimum du début de la susie class.
+* Type: Int
+* Default: 17
 
 
 ### mailServer
 
-Serveur Mail (pour l'envoi de mail). cf `example/susies.rb` pour un exemple de configuration basé sur gmail.
-
-Type: String
-
-Default: ''
+* Serveur Mail (pour l'envoi de mail). cf `example/susies.rb` pour un exemple de configuration basé sur gmail.
+* Type: String
+* Default: ''
 
 
 ### mailPort
 
-Port du serveur mail. cf `example/susies.rb` pour un exemple de configuration basé sur gmail.
-
-Type: Int
-
-Default: 0
+* Port du serveur mail. cf `example/susies.rb` pour un exemple de configuration basé sur gmail.
+* Type: Int
+* Default: 0
 
 
 ### mailUname
 
-Nom d'utilisateur pour se connecter au serveur mail. cf `example/susies.rb` pour un exemple de configuration basé sur gmail.
-
-Type: String
-
-Default: ''
+* Nom d'utilisateur pour se connecter au serveur mail. cf `example/susies.rb` pour un exemple de configuration basé sur gmail.
+* Type: String
+* Default: ''
 
 
 ### mailPasswd
 
-Mot de passe pour se connecter au serveur mail. cf `example/susies.rb` pour un exemple de configuration basé sur gmail.
-
-Type: String
-
-Default: ''
+* Mot de passe pour se connecter au serveur mail. cf `example/susies.rb` pour un exemple de configuration basé sur gmail.
+* Type: String
+* Default: ''
 
 
 ### mailTargets
 
-Emails des personnes devant être alertés lorsqu'une susie a été trouvée.
-
-Type: Array
-
-Default: [mailUname]
+* Emails des personnes devant être alertés lorsqu'une susie a été trouvée.
+* Type: Array
+* Default: [mailUname]
 
 
 ### buddiesAutologins
 
-Autologins des personnes devant être inscrites à la susie class (en plus de vous).
-
-Type: Array
-
-Default: []
+* Autologins des personnes devant être inscrites à la susie class (en plus de vous).
+* Type: Array
+* Default: []
 
 
 ## Cron Task
