@@ -29,21 +29,21 @@ class Susies
 	# @endWeek      End of week                            Default: end of current week
 	##
 	def initialize(data={})
-		@login        			= data[:login]       				|| [DEFAULT_LOGIN]
-		@maxStudent   			= data[:maxStudent]  				|| DEFAULT_MAX_STUDENT
+		@login							= data[:login]							|| [DEFAULT_LOGIN]
+		@maxStudent					= data[:maxStudent]					|| DEFAULT_MAX_STUDENT
 		@minHour						= data[:minHour]						|| DEFAULT_MIN_HOUR
-		@autologinURL 			= data[:autologinURL] 			|| DEFAULT_AUTOLOGIN_URL
+		@autologinURL				= data[:autologinURL]				|| DEFAULT_AUTOLOGIN_URL
 
-		@mailServer   			= data[:mailServer]					|| DEFAULT_MAIL_SERVER
-		@mailPort     			= data[:mailPort]						|| DEFAULT_MAIL_PORT
-		@mailUname    			= data[:mailUname]					|| DEFAULT_MAIL_UNAME
-		@mailPasswd   			= data[:mailPasswd]  				|| DEFAULT_MAIL_PASSWD
-		@mailTargets  			= data[:mailTargets] 				|| [@mailUname]
+		@mailServer					= data[:mailServer]					|| DEFAULT_MAIL_SERVER
+		@mailPort						= data[:mailPort]						|| DEFAULT_MAIL_PORT
+		@mailUname					= data[:mailUname]					|| DEFAULT_MAIL_UNAME
+		@mailPasswd					= data[:mailPasswd]					|| DEFAULT_MAIL_PASSWD
+		@mailTargets				= data[:mailTargets]				|| [@mailUname]
 
-		@buddiesAutologins 	= data[:buddiesAutologins] 	|| []
+		@buddiesAutologins	= data[:buddiesAutologins]	|| []
 
-		@startWeek    			= DEFAULT_START_WEEK
-		@endWeek      			= DEFAULT_END_WEEK
+		@startWeek					= DEFAULT_START_WEEK
+		@endWeek						= DEFAULT_END_WEEK
 	end
 
 
@@ -87,9 +87,9 @@ class Susies
 
 		susiesData[BASE_JSON].each do |susie|
 			if matchCriterias? susie
-				registerSusie 	susie, COOKIE_FILE
+				registerSusie		susie, COOKIE_FILE
 				registerBuddies	susie
-				informBuddies 	susie
+				informBuddies		susie
 				
 				return true
 			end
