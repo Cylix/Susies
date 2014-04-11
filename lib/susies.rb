@@ -29,8 +29,9 @@ class Susies
 	# @endWeek      End of week                            Default: end of current week
 	##
 	def initialize(data={})
-		@login        			= data[:login]       				|| DEFAULT_LOGIN
+		@login        			= data[:login]       				|| [DEFAULT_LOGIN]
 		@maxStudent   			= data[:maxStudent]  				|| DEFAULT_MAX_STUDENT
+		@minHour						= data[:minHour]						|| DEFAULT_MIN_HOUR
 		@autologinURL 			= data[:autologinURL] 			|| DEFAULT_AUTOLOGIN_URL
 
 		@mailServer   			= data[:mailServer]					|| DEFAULT_MAIL_SERVER
@@ -56,7 +57,7 @@ class Susies
 	##
 	def check!
 		log 'Start Checking'
-		setAuthCookie
+		setAuthCookie COOKIE_FILE, @autologinURL
 
 		while true
 			susiesData = getSusiesData
@@ -189,7 +190,10 @@ Register here: #{ REGISTER_URL }/#{ susie[ID_JSON] }.
 	# Does Susie match defined criterias?
 	##
 	def matchCriterias?(susie)
-		susie[MAKER_JSON][MAKER_LOGIN_JSON] == @login and susie[REGISTERED_JSON] <= @maxStudent
+		@login.each do |login|
+			return true if susie[MAKER_JSON][MAKER_LOGIN_JSON] == login and susie[REGISTERED_JSON] <= @maxStudent and Time.parse(susie[START_JSON]).hour >= @minHour
+		end
+		false
 	end
 
 
@@ -221,6 +225,7 @@ Register here: #{ REGISTER_URL }/#{ susie[ID_JSON] }.
 	##
 	def registerBuddies(susie)
 		@buddiesAutologins.each do |autologin|
+			setAuthCookie BUDDIES_COOKIE_FILE, autologin
 			registerSusie susie, BUDDIES_COOKIE_FILE
 		end
 	end
@@ -273,8 +278,8 @@ Register here: #{ REGISTER_URL }/#{ susie[ID_JSON] }.
 	#
 	# Log on the intra and save user's cookie in COOKIE_FILE
 	##
-	def setAuthCookie
-		`curl -s -L -c #{ COOKIE_FILE } #{ @autologinURL }`
+	def setAuthCookie(cookie_file, autologin)
+		`curl -s -L -c #{ cookie_file } #{ autologin }`
 	end
 
 end

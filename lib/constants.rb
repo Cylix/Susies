@@ -5,6 +5,8 @@ class Susies
   DEFAULT_LOGIN         = "clark_s"
   # Maximum already registered students
   DEFAULT_MAX_STUDENT   = 9
+  # Minimum start hour
+  DEFAULT_MIN_HOUR      = 17
   # Default Autologin
   DEFAULT_AUTOLOGIN_URL = ''
   # Default mail server
@@ -20,18 +22,15 @@ class Susies
   # default end week
   DEFAULT_END_WEEK      = Date.today.end_of_week
 
-
   # Susie JSON API
   SUSIES_URL            = "https://intra.epitech.eu/planning/587/events"
   # Susie Register link
   REGISTER_URL          = "https://intra.epitech.eu/planning/587"
 
-
   # Cookie File
   COOKIE_FILE           = "cookies.txt"
   # Buddies Cookie File
-  BUDDIES_COOKIE_FILE   = "buddies_cookies.txt"
-
+  BUDDIES_COOKIE_FILE   = "buddies_cookie_file.txt"
 
   # Encapsulation
   BASE_JSON             = "activities"
