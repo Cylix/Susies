@@ -1,25 +1,28 @@
+# -*- coding: utf-8 -*-
 require 'active_support/time'
 
 class Susies
   # Susie login
   DEFAULT_LOGIN         = "clark_s"
-  # Maximum already registered students
+  # Nombre max d'étudiants déjà inscrits
   DEFAULT_MAX_STUDENT   = 9
-  # Minimum start hour
+  # Heure de début minimale
   DEFAULT_MIN_HOUR      = 17
-  # Default Autologin
+  # Autologin
   DEFAULT_AUTOLOGIN_URL = ''
-  # Default mail server
+
+  # Serveur mail (addr)
   DEFAULT_MAIL_SERVER   = ''
-  # Default mail port
+  # Serveur mail (port)
   DEFAULT_MAIL_PORT     = 0
-  # Default mail user name
+  # Serveur mail (uname)
   DEFAULT_MAIL_UNAME    = ''
-  # Default mail password
+  # Serveur mail (pwd)
   DEFAULT_MAIL_PASSWD   = ''
-  # default start week
+
+  # Début de la 1ère semaine à checker
   DEFAULT_START_WEEK    = Date.today.beginning_of_week
-  # default end week
+  # Fin de la 1ère semaine à checker
   DEFAULT_END_WEEK      = Date.today.end_of_week
 
   # Susie JSON API
