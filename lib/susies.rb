@@ -6,12 +6,12 @@ require './IntraRequestsManager.rb'
 
 class Susies
 
-  def initialize(data={})
-    @filters   = data[:filters]
-    @mailInfos = data[:mailInfos]
+  def initialize(autologins={}, filters=nil, mailInfos=nil)
+    @filters   = filters]
+    @mailInfos = mailInfos
 
-    @autologinPath     = data[:autologinPath]
-    @buddiesAutologins = data[:buddiesAutologins] || []
+    @autologinPath     = autologins[:autologinPath]
+    @buddiesAutologins = autologins[:buddiesAutologins] || []
     @requestsManager   = IntraRequestsManager.new
   end
 
