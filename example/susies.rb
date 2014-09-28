@@ -11,7 +11,7 @@ data = {
 	mailUname: 					'mail@gmail.com',
 	mailPasswd: 				'password',
 	mailTargets: 				%w[mylogin_x@epitech.eu buddy_login@epitech.eu],
-	buddiesAutologins: 	%w[https://intra.epitech.eu/buddy_autologin_url]
+	buddiesAutologins: 	%w[/buddy_autologin_url]
 }
 
 Susies.new( data ).check!

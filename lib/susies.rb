@@ -1,285 +1,118 @@
-# Constants
-require 'constants.rb'
 # Dependencies
 require 'active_support/time'
 require 'net/smtp'
-require 'json'
+require './Susie.rb'
+require './IntraRequestsManager.rb'
 
-##
-# Susies Class
-##
 class Susies
 
-	##
-	# Initialize
-	#
-	# @login        Asked Susie Login                      Default: clark_s
-	# @maxStudent   Maximum already registered students    Default: 9
-	#
-	# @autologinURL Intranet Autologin URL                 No default
-	# @mailServer   Mail Server                            No default
-	# @mailPort     Mail Port                              No default
-	# @mailUname    Mail UserName                          No default
-	# @mailPasswd   Mail Password                          No default
-	# @mailTargets  People to inform by mail about sub.    Default: @mailUname
-	#
-	# @buddiesAuto. Buddies autologins 										 No default
-	#
-	# @startWeek    Beginning of week                      Default: beginning of current week
-	# @endWeek      End of week                            Default: end of current week
-	##
-	def initialize(data={})
-		@login							= data[:login]							|| [DEFAULT_LOGIN]
-		@maxStudent					= data[:maxStudent]					|| DEFAULT_MAX_STUDENT
-		@minHour						= data[:minHour]						|| DEFAULT_MIN_HOUR
-		@autologinURL				= data[:autologinURL]				|| DEFAULT_AUTOLOGIN_URL
+  def initialize(data={})
+    @filters   = data[:filters]
+    @mailInfos = data[:mailInfos]
 
-		@mailServer					= data[:mailServer]					|| DEFAULT_MAIL_SERVER
-		@mailPort						= data[:mailPort]						|| DEFAULT_MAIL_PORT
-		@mailUname					= data[:mailUname]					|| DEFAULT_MAIL_UNAME
-		@mailPasswd					= data[:mailPasswd]					|| DEFAULT_MAIL_PASSWD
-		@mailTargets				= data[:mailTargets]				|| [@mailUname]
+    @autologinPath     = data[:autologinPath]
+    @buddiesAutologins = data[:buddiesAutologins] || []
+    @requestsManager   = IntraRequestsManager.new
+  end
 
-		@buddiesAutologins	= data[:buddiesAutologins]	|| []
+  
+  def check!
+    @requestsManager.authenticate! @autologinPath
+    
+    startDate = Date.today.beginning_of_week
+    endDate   = Date.today.end_of_week
 
-		@startWeek					= DEFAULT_START_WEEK
-		@endWeek						= DEFAULT_END_WEEK
-	end
+    loop do
+      susies = @requestsManager.getSusies startDate, endDate
+      
+      break if susies.empty?
 
+      findSusie susies unless registeredThisWeek? susies
+      
+      startDate += 1.week
+      endDate   += 1.week
+    end
+  end
 
-	##
-	# Check!
-	#
-	# Iterate throw weeks, until there is no Susie in a week.
-	# For each week, check if the current user is already registered to a Susie Class.
-	# If user has not already been registered to a Susie Class, try to find an available Susie following criterias (maxStudent and Susie Login).
-	# If a Susie class is found, try to register to this Susie Class and send a mail to user's friends.
-	##
-	def check!
-		log 'Start Checking'
-		setAuthCookie COOKIE_FILE, @autologinURL
+  
+  private
 
-		while true
-			susiesData = getSusiesData
-
-			break if noSusie? susiesData
-
-			findSusie susiesData unless registeredThisWeek? susiesData
-
-			nextWeek!
-		end
-
-		log 'End Checking'
-	end
+  
+  def findSusie(susies)
+    susies.each do |susie|
+      if matchCriterias? susie
+	registerSusie  susie
+        informEveryone susie
+        break
+      end
+    end
+  end
 
 
-	private
-	
+  def formatTime(time)
+    time.strftime '%H:%M %Y-%m-%d'
+  end
 
-	##
-	# findSusie
-	#
-	# Try to find and register to a Susie Class.
-	# Send Mail to user's friends in case of success. 
-	##
-	def findSusie(susiesData)
-		log "Trying to register susie class with #{ @login } for week: #{ formatDate @startWeek } #{ formatDate @endWeek }."
-
-		susiesData[BASE_JSON].each do |susie|
-			if matchCriterias? susie
-				registerSusie		susie, COOKIE_FILE
-				registerBuddies	susie
-				informBuddies		susie
-				
-				return true
-			end
-		end
-		
-		log "No susie class found following criterias."
-		return false
-	end
-
-
-	##
-	# formatDate
-	#
-	# Take Date Object as parameter
-	# Return formated Date (YYY-MM-DD)
-	##
-	def formatDate(date)
-		date.strftime '%Y-%m-%d'
-	end
-
-
-	##
-	# formatTime
-	#
-	# Take Time Object as parameter
-	# Return formated Time (HH:MM YYY-MM-DD)
-	##
-	def formatTime(time)
-		time.strftime '%H:%M %Y-%m-%d'
-	end
-
-
-	##
-	# getSusiesData
-	#
-	# Return Susie Classes JSON Data
-	#
-	def getSusiesData
-		JSON.parse  `curl -s -L -b #{ COOKIE_FILE } '#{ SUSIES_URL }?start=#{ formatDate @startWeek }&end=#{ formatDate @endWeek }&format=json'`
-	end
-
-
-	##
-	# getRegisterMail
-	#
-	# Generate mail which will be send to user's friends.
-	##
-	def getRegisterMail(susie)
-		<<-MESSAGE
+  
+  def getRegisterMail(susie)
+    <<-MESSAGE
 Hey,
 
-I've just registered to a susie class with #{ susie[MAKER_JSON][MAKER_LOGIN_JSON] }.
+I've just registered to a susie class.
 
-Title:        #{ susie[TITLE_JSON] }
-Type:         #{ susie[TYPE_JSON] }
-
-Description:
-	#{ susie[DESC_JSON] }
-
-Start:        #{ susie[START_JSON] }.
-End:          #{ susie[END_JSON] }.
-Place left:   #{ 9 - susie[REGISTERED_JSON] }.
-
-Register here: #{ REGISTER_URL }/#{ susie[ID_JSON] }.
-
-		MESSAGE
-	end
+#{ susie.to_s }
+    MESSAGE
+  end
 
 
-	##
-	# informBuddies
-	#
-	# send mail to user's friends
-	##
-	def informBuddies(susie)
-		message = getRegisterMail susie
+  def informEveryone(susie)
+    if @mailInfos && @mailInfos[:targets]
+      smtp = Net::SMTP.new 'smtp.gmail.com', 587
+      smtp.enable_starttls
+      
+      smtp.start('gmail.com', @mailInfos[:email], @mailInfos[:passwd], :plain) do |smtp|
+        smtp.send_message getRegisterMail(susie), @mailInfos[:email], @mailInfos[:targets]
+      end
+    end
+  end
+  
+  def matchCriterias?(susie)
+    return true unless @filters
 
-		for email in @mailTargets
-			log "Send mail to #{ email }"
-			sendMail email, message
-		end
-	end
+    good_min_hour    = @filters[:minHour].nil? || susie.start >= @filters[:minHour]
+    good_max_hour    = @filters[:maxHour].nil? || susie.end >= @filters[:maxHour]
+    good_nb_students = @filters[:nb_registered].nil? || susie.nb_registered <= @filters[:nb_registered]
+    good_login       = @filters[:logins].nil?
 
+    if @filters[:logins]
+      @logins.each do |login|
+        good_login = true if susie.login == login
+      end
+    end
 
-	##
-	# log
-	#
-	# Write log info
-	##
-	def log(message)
-		puts "[#{ formatTime Time.now }]> #{ message }"
-	end
+    return good_min_hour && good_max_hour && good_login && good_nb_students
+  end
 
+  
+  def registerSusie(susie)
+    @requestsManager.registerSusie susie
 
-	##
-	# matchCriterias
-	#
-	# Does Susie match defined criterias?
-	##
-	def matchCriterias?(susie)
-		@login.each do |login|
-			return true if susie[MAKER_JSON][MAKER_LOGIN_JSON] == login and susie[REGISTERED_JSON] <= @maxStudent and Time.parse(susie[START_JSON]).hour >= @minHour
-		end
-		false
-	end
+    if @buddiesAutologins
+      @buddiesAutologins.each do |autologin|
+        buddiesRequestsManager = IntraRequestsManager.new
+        buddiesRequestsManager.authenticate! autologin
+        buddiesRequestsManager.registerSusie susie
+      end
+    end
+  end
+  
 
-
-	##
-	# nextWeek!
-	#
-	# Go to next week
-	##
-	def nextWeek!
-		@startWeek += 1.week
-		@endWeek   += 1.week
-	end
-
-
-	##
-	# noSusie?
-	#
-	# Check if there are SusieClasses in the given JSON data
-	##
-	def noSusie?(susiesData)
-		!susiesData[BASE_JSON] or susiesData[BASE_JSON].length == 0
-	end
-
-
-	##
-	# registerBuddies
-	#
-	# register buddies with given autologins
-	##
-	def registerBuddies(susie)
-		@buddiesAutologins.each do |autologin|
-			setAuthCookie BUDDIES_COOKIE_FILE, autologin
-			registerSusie susie, BUDDIES_COOKIE_FILE
-		end
-	end
-
-
-	##
-	# registerSusie
-	#
-	# register to given SusieClass
-	##
-	def registerSusie(susie, cookie_file)
-		`curl -s -b #{ cookie_file } -L -X POST #{ REGISTER_URL }/#{ susie[ID_JSON] }/subscribe?format=json`
-		log "Succesfully registered to susie class."
-	end
-
-
-	##
-	# registeredThisWeek?
-	#
-	# Determine if user is already registered to a Susie Class during the given week.
-	##
-	def registeredThisWeek?(weekSusies)
-		weekSusies[BASE_JSON].each do |susie|
-			if susie[EVENT_REGISTERED_JSON]
-				log "Already registered to a susie class with #{ susie[MAKER_JSON][MAKER_LOGIN_JSON] } for week: #{ formatDate @startWeek } #{ formatDate @endWeek }."
-				return true
-			end
-		end
-		
-		log "Not registered to a susie class for week: #{ formatDate @startWeek } #{ formatDate @endWeek }."
-		return false
-	end
-
-
-	##
-	# sendMail
-	#
-	# send mail from user to a buddy.
-	##
-	def sendMail(email, message)
-		smtp = Net::SMTP.new @mailServer, @mailPort
-		smtp.enable_starttls_auto
-		smtp.start @mailServer, @mailUname, @mailPasswd, :plain
-		smtp.send_message message, @mailUname, email
-	end
-
-
-	##
-	# setAuthCookie
-	#
-	# Log on the intra and save user's cookie in COOKIE_FILE
-	##
-	def setAuthCookie(cookie_file, autologin)
-		`curl -s -L -c #{ cookie_file } #{ autologin }`
-	end
+  def registeredThisWeek?(susies)
+    susies.each do |susie|
+      return true if susie.is_registered
+    end
+    
+    false
+  end
 
 end
