@@ -19,7 +19,6 @@ Soit via un `Gemfile`: `gem 'susies'` et `bundle install`
 L'utilisation est assez simple:
 
 ```
-
 require 'susies'
 
 # whiteListFilters: susies MUST match these filters
