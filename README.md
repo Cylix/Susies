@@ -18,7 +18,7 @@ Soit via un `Gemfile`: `gem 'susies'` et `bundle install`
 
 L'utilisation est assez simple:
 
-```
+```ruby
 require 'susies'
 
 # whiteListFilters: susies MUST match these filters
