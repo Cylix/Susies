@@ -6,9 +6,10 @@ require './IntraRequestsManager.rb'
 
 class Susies
 
-  def initialize(autologins={}, filters=nil, mailInfos=nil)
-    @filters   = filters]
-    @mailInfos = mailInfos
+  def initialize(autologins={}, whiteListfilters=nil, blackListFilters=nil, mailInfos=nil)
+    @whiteListFilters   = whiteListFilters
+    @blackListFilters   = blackListFilters
+    @mailInfos          = mailInfos
 
     @autologinPath     = autologins[:autologinPath]
     @buddiesAutologins = autologins[:buddiesAutologins] || []
@@ -40,7 +41,7 @@ class Susies
   
   def findSusie(susies)
     susies.each do |susie|
-      if matchCriterias? susie
+      if !matchCriterias?(susie, @blackListFilters) && matchCriterias?(susie, @whiteListFilters)
 	registerSusie  susie
         informEveryone susie
         break
@@ -74,24 +75,25 @@ I've just registered to a susie class.
       end
     end
   end
+
   
-  def matchCriterias?(susie)
-    return true unless @filters
+  def matchCriterias?(susie, filters)
+    return true unless filters
 
-    good_min_hour    = @filters[:minHour].nil? || susie.start >= @filters[:minHour]
-    good_max_hour    = @filters[:maxHour].nil? || susie.end >= @filters[:maxHour]
-    good_nb_students = @filters[:nb_registered].nil? || susie.nb_registered <= @filters[:nb_registered]
-    good_login       = @filters[:logins].nil?
-    good_type        = @filters[:type].nil? || susie.type == @filters[:type]
-    good_title       = @filters[:title].nil? || susie.title.include? @filters[:title]
+    min_hour    = filters[:minHour].nil? || susie.start >= filters[:minHour]
+    max_hour    = filters[:maxHour].nil? || susie.end >= filters[:maxHour]
+    nb_students = filters[:nb_registered].nil? || susie.nb_registered <= filters[:nb_registered]
+    login       = filters[:logins].nil?
+    type        = filters[:type].nil? || susie.type == filters[:type]
+    title       = filters[:title].nil? || susie.title.include? filters[:title]
 
-    if @filters[:logins]
+    if filters[:logins]
       @logins.each do |login|
-        good_login = true if susie.login == login
+        login = true if susie.login == login
       end
     end
 
-    return good_min_hour && good_max_hour && good_login && good_nb_students && good_type && good_title
+    return min_hour && max_hour && login && nb_students && type && title
   end
 
   

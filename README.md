@@ -19,27 +19,37 @@ Soit via un `Gemfile`: `gem 'susies'` et `bundle install`
 L'utilisation est assez simple:
 
 ```
+
 require 'susies'
 
-filters = {
+# whiteListFilters: susies MUST match these filters
+whiteListFilters = {
   login:      %w[login_x],
   maxStudent: 6,
   minHour:    8,
   maxHour:    17
 }
 
+# blackListFilters: susies MUST NOT match these filters
+blackListFilters = {
+  type: 'reading',
+  title: 'zola'
+}
+
+# autologin: intranet authentication
 autologins = {
   autologinPath:     'https://intra.epitech.eu/my_autologin_url',
   buddiesAutologins: %w[/buddy_autologin_url],
 }
 
+# mailInfos: mailer configuration
 mailInfos = {
   uname:  'mail@gmail.com',
   passwd: 'password',
   targets: %w[mylogin_x@epitech.eu buddy_login@epitech.eu]
 }
 
-Susies.new( autologins, filters, mailInfos ).check!
+Susies.new( autologins, whiteListfilters, blackListFilters, mailInfos ).check!
 ```
 
 La gem se connectera alors à l'intra pour vérifier l'existence d'une susie correspondant à vos critères, durant une semaine où vous n'avez pas encore de susie.
@@ -48,7 +58,11 @@ Si elle trouve une susie, elle vous y inscrira, inscrira vos amis et préviendra
 
 ## Filters
 
-A utiliser si vous souhaitez filtrer les susies qui vous intéressent
+A utiliser si vous souhaitez filtrer les susies qui vous intéressent.
+
+Les whiteListFilters sont les critères que les susies doivent avoir, à l'inverse des blackListFilters.
+
+Laissez `nil` si vous ne voullez pas de filtres.
 
 ### login
 
@@ -95,6 +109,8 @@ A utiliser si vous souhaitez filtrer les susies qui vous intéressent
 ## MailInfos
 
 A utiliser si vous souhaitez être alerté en cas d'inscription par le script. Fonctionne avec une adresse GMail.
+
+Laissez `nil` si vous ne voullez pas envoyer de mails.
 
 ### uname
 
@@ -147,7 +163,6 @@ Par exemple, il est intéressant de faire une tache s'exécutant toutes les 5 mi
 
 1. Gestion des jours
 2. Planning horaire par jour
-3. Blacklist
 
 
 ## Contribuer
