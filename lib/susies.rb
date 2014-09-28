@@ -53,7 +53,6 @@ class Susies
     time.strftime '%H:%M %Y-%m-%d'
   end
 
-  
   def getRegisterMail(susie)
     <<-MESSAGE
 Hey,
@@ -115,4 +114,5 @@ I've just registered to a susie class.
     false
   end
 
+  
 end
