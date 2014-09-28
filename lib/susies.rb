@@ -82,6 +82,8 @@ I've just registered to a susie class.
     good_max_hour    = @filters[:maxHour].nil? || susie.end >= @filters[:maxHour]
     good_nb_students = @filters[:nb_registered].nil? || susie.nb_registered <= @filters[:nb_registered]
     good_login       = @filters[:logins].nil?
+    good_type        = @filters[:type].nil? || susie.type == @filters[:type]
+    good_title       = @filters[:title].nil? || susie.title.include? @filters[:title]
 
     if @filters[:logins]
       @logins.each do |login|
@@ -89,7 +91,7 @@ I've just registered to a susie class.
       end
     end
 
-    return good_min_hour && good_max_hour && good_login && good_nb_students
+    return good_min_hour && good_max_hour && good_login && good_nb_students && good_type && good_title
   end
 
   

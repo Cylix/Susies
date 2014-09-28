@@ -21,85 +21,113 @@ L'utilisation est assez simple:
 ```
 require 'susies'
 
-data = {
-	login:              %w[login_x],
-	maxStudent:         6,
-	autologinURL:       'https://intra.epitech.eu/my_autologin_url',
-	mailServer:         'smtp.gmail.com',
-	mailPort:           587,
-	mailUname:          'mail@gmail.com',
-	mailPasswd:         'password',
-	mailTargets:        %w[mylogin_x@epitech.eu buddy_login@epitech.eu],
-	buddiesAutologins:  %w[https://intra.epitech.eu/buddy_autologin_url]
+filters = {
+  login:      %w[login_x],
+  maxStudent: 6,
+  minHour:    8,
+  maxHour:    17
 }
 
-Susies.new( data ).check!
+autologins = {
+  autologinPath:     'https://intra.epitech.eu/my_autologin_url',
+  buddiesAutologins: %w[/buddy_autologin_url],
+}
+
+mailInfos = {
+  uname:  'mail@gmail.com',
+  passwd: 'password',
+  targets: %w[mylogin_x@epitech.eu buddy_login@epitech.eu]
+}
+
+Susies.new( autologins, filters, mailInfos ).check!
 ```
 
 La gem se connectera alors à l'intra pour vérifier l'existence d'une susie correspondant à vos critères, durant une semaine où vous n'avez pas encore de susie.
 
 Si elle trouve une susie, elle vous y inscrira, inscrira vos amis et préviendra tout le monde par mail.
 
+## Filters
+
+A utiliser si vous souhaitez filtrer les susies qui vous intéressent
 
 ### login
 
 * Les logins des susies recherchées.
 * Type: Array
-* Default: ['clark_s']
+* Default: nil
 
 
 ### maxStudent
 
 * Nombre d'étudiants déjà inscrit à la susie class (0: personne d'inscrit, 10: plus de places)
 * Type: int
-* Default: 9
+* Default: nil
 
 
 ### minHour
 
 * Heure minimum du début de la susie class.
 * Type: Int
-* Default: 17
+* Default: nil
 
 
-### mailServer
+### maxHour
 
-* Serveur Mail (pour l'envoi de mail). cf `example/susies.rb` pour un exemple de configuration basé sur gmail.
-* Type: String
-* Default: ''
-
-
-### mailPort
-
-* Port du serveur mail. cf `example/susies.rb` pour un exemple de configuration basé sur gmail.
+* Heure maximum du début de la susie class.
 * Type: Int
-* Default: 0
+* Default: nil
 
 
-### mailUname
+### title
+
+* KeyWord que le titre de la susie doit contenir.
+* Type: String
+* Default: nil
+
+
+### type
+
+* Type de la susie
+* Type: String
+* Default: nil
+
+
+## MailInfos
+
+A utiliser si vous souhaitez être alerté en cas d'inscription par le script. Fonctionne avec une adresse GMail.
+
+### uname
 
 * Nom d'utilisateur pour se connecter au serveur mail. cf `example/susies.rb` pour un exemple de configuration basé sur gmail.
 * Type: String
-* Default: ''
+* Default: nil
 
 
-### mailPasswd
+### passwd
 
 * Mot de passe pour se connecter au serveur mail. cf `example/susies.rb` pour un exemple de configuration basé sur gmail.
 * Type: String
-* Default: ''
+* Default: nil
 
 
-### mailTargets
+### targets
 
 * Emails des personnes devant être alertés lorsqu'une susie a été trouvée.
 * Type: Array
-* Default: [mailUname]
+* Default: nil
 
+
+## Autologins
+
+### autologinPath
+
+* Votre autologin. Il s'agit du path et non de l'URL complète. Ce paramètre est OBLIGATOIRE!
+* Type String
+* Default: nil
 
 ### buddiesAutologins
 
-* Autologins des personnes devant être inscrites à la susie class (en plus de vous).
+* Autologins des personnes devant être inscrites à la susie class (en plus de vous). Il s'agit du path et non de l'URL complète.
 * Type: Array
 * Default: []
 
@@ -117,17 +145,9 @@ Par exemple, il est intéressant de faire une tache s'exécutant toutes les 5 mi
 
 ## Améliorations Possibles
 
-1. Dictionnaire de mots clés
+1. Gestion des jours
 2. Planning horaire par jour
 3. Blacklist
-4. Ajouts de critères?
-
-
-## Doc
-
-Une doc peut être générée grâce à la commande `sdoc`.
-La gem `sdoc` est bien évidemment nécessaire... (`gem install sdoc`)
-You can generate documentation by executing: `sdoc`
 
 
 ## Contribuer

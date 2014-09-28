@@ -10,7 +10,7 @@ filters = {
 }
 
 autologins = {
-  autologinPATH:     'https://intra.epitech.eu/my_autologin_url',
+  autologinPath:     'https://intra.epitech.eu/my_autologin_url',
   buddiesAutologins: %w[/buddy_autologin_url],
 }
 
