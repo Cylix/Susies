@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'susies'
-  s.version     = '0.1.0'
-  s.date        = '2014-09-28'
+  s.version     = '0.1.1'
+  s.date        = '2014-10-07'
   s.summary     = 'Epitech Susie Classes Bot'
   s.description = 'Susies is a Gem to register easily for Epitech Susie Classes'
   s.authors     = ['Simon Ninon']

@@ -4,15 +4,11 @@ require 'net/http'
 require 'json'
 
 class IntraRequestsManager
-
-  INTRA_BASE_URL        = 'intra.epitech.eu'
-  LIST_SUSIES_PATH      = '/planning/1919/events'
-  REGISTER_SUSIE_PATH   = '/planning/1919'
-
   
   def initialize
-    @http = Net::HTTP.new INTRA_BASE_URL, 443
+    @http = Net::HTTP.new 'intra.epitech.eu', 443
     @http.use_ssl = true
+    @planningID = 0
   end
 
   
@@ -21,19 +17,36 @@ class IntraRequestsManager
     
     response_cookies = response.get_fields 'set-cookie'
     cookies_array = response_cookies.collect { |cookie| cookie.split('; ').first }
-
     @cookies = cookies_array.join('; ')
+
+    fetchPlanningID!
+  end
+
+  def fetchPlanningID!
+    path = "/planning/all-schedules/?format=json"
+    response = @http.get path, { 'Cookie' => @cookies }
+
+    planningsJSON = JSON.parse response.body
+
+    unless planningsJSON.nil?
+      planningsJSON.each do |planning|
+        if planning['type'] == 'susie'
+          @planningID = planning['id']
+          break
+        end
+      end
+    end
   end
 
   
   def getSusies(startDate, endDate)
-    path = "#{ LIST_SUSIES_PATH }?start=#{ formatDate startDate }&end=#{ formatDate endDate }&format=json"
+    path = "/planning/#{ @planningID }/events?start=#{ formatDate startDate }&end=#{ formatDate endDate }&format=json"
     response = @http.get path, { 'Cookie' => @cookies }
 
     susiesJSON = JSON.parse response.body
 
     unless susiesJSON.nil?
-      susiesJSON.collect { |susieJSON| Susie.new susieJSON }
+      susiesJSON.collect { |susieJSON| Susie.new susieJSON, "https://intra.epitech.eu/planning/#{ @planningID }/#{ susieJSON['id'] }" }
     else
       []
     end
@@ -41,7 +54,7 @@ class IntraRequestsManager
 
   
   def registerSusie(susie)
-    path = "#{ REGISTER_SUSIE_PATH }/#{ susie.id }/subscribe?format=json&registercalendar"
+    path = "/planning/#{ @planningID }/#{ susie.id }/subscribe?format=json&registercalendar"
     response = @http.post path, '', { 'Cookie' => @cookies }
 
     susie.nb_registered -= 1    

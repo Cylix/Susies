@@ -6,7 +6,7 @@ class Susie
   attr_accessor :is_registered, :nb_registered, :login, :id, :start, :end, :type, :title, :description, :url
 
   
-  def initialize(susieJSON)
+  def initialize(susieJSON, susieURL = "")
     self.id             = susieJSON['id']
     self.title          = susieJSON['title']
     self.type           = susieJSON['type']
@@ -16,7 +16,7 @@ class Susie
     self.end            = Time.parse susieJSON['end']
     self.is_registered  = susieJSON['event_registered']
     self.nb_registered  = susieJSON['registered']
-    self.url            = "#{ IntraRequestsManager::INTRA_BASE_URL }#{ IntraRequestsManager::REGISTER_SUSIE_PATH }/#{ self.id }"
+    self.url            = susieURL
   end
 
 
