@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-require 'susies'
+require 'Susies'
 
 # whiteListFilters: susies MUST match these filters
 whiteListFilters = {
@@ -18,8 +18,8 @@ blackListFilters = {
 
 # autologin: intranet authentication
 autologins = {
-  autologinPath:     'https://intra.epitech.eu/my_autologin_url',
-  buddiesAutologins: %w[/buddy_autologin_url],
+  autologinPath:     '/autologin_path',
+  buddiesAutologins: %w[/buddy_autologin_path],
 }
 
 # mailInfos: mailer configuration
@@ -29,4 +29,4 @@ mailInfos = {
   targets: %w[mylogin_x@epitech.eu buddy_login@epitech.eu]
 }
 
-Susies.new( autologins, whiteListfilters, blackListFilters, mailInfos ).check!
+Susies.new( autologins, whiteListFilters, blackListFilters, mailInfos ).check!

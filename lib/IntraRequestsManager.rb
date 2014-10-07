@@ -1,13 +1,13 @@
 # Dependencies
-require './Susie.rb'
+require 'Susie.rb'
 require 'net/http'
 require 'json'
 
 class IntraRequestsManager
 
   INTRA_BASE_URL        = 'intra.epitech.eu'
-  LIST_SUSIES_PATH      = '/planning/587/events'
-  REGISTER_SUSIE_PATH   = '/planning/587'
+  LIST_SUSIES_PATH      = '/planning/1919/events'
+  REGISTER_SUSIE_PATH   = '/planning/1919'
 
   
   def initialize
@@ -32,8 +32,8 @@ class IntraRequestsManager
 
     susiesJSON = JSON.parse response.body
 
-    unless susiesJSON['activities'].nil?
-      susiesJSON['activities'].collect { |susieJSON| Susie.new susieJSON }
+    unless susiesJSON.nil?
+      susiesJSON.collect { |susieJSON| Susie.new susieJSON }
     else
       []
     end
@@ -41,8 +41,8 @@ class IntraRequestsManager
 
   
   def registerSusie(susie)
-    path = "#{ REGISTER_SUSIE_PATH }/#{ susie.id }/subscribe?format=json"
-    response = @http.post path, { 'Cookie' => @cookies }
+    path = "#{ REGISTER_SUSIE_PATH }/#{ susie.id }/subscribe?format=json&registercalendar"
+    response = @http.post path, '', { 'Cookie' => @cookies }
 
     susie.nb_registered -= 1    
     susie
