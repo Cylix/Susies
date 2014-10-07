@@ -19,7 +19,7 @@ Soit via un `Gemfile`: `gem 'susies'` et `bundle install`
 L'utilisation est assez simple:
 
 ```ruby
-require 'susies'
+require 'Susies'
 
 # whiteListFilters: susies MUST match these filters
 whiteListFilters = {
@@ -48,7 +48,7 @@ mailInfos = {
   targets: %w[mylogin_x@epitech.eu buddy_login@epitech.eu]
 }
 
-Susies.new( autologins, whiteListfilters, blackListFilters, mailInfos ).check!
+Susies.new( autologins, whiteListFilters, blackListFilters, mailInfos ).check!
 ```
 
 La gem se connectera alors à l'intra pour vérifier l'existence d'une susie correspondant à vos critères, durant une semaine où vous n'avez pas encore de susie.
@@ -66,7 +66,7 @@ Laissez `nil` si vous ne voullez pas de filtres.
 ### login
 
 * Les logins des susies recherchées.
-* Type: Array
+* Type: Array of strings
 * Default: nil
 
 
@@ -128,7 +128,7 @@ Laissez `nil` si vous ne voullez pas envoyer de mails.
 ### targets
 
 * Emails des personnes devant être alertés lorsqu'une susie a été trouvée.
-* Type: Array
+* Type: Array of strings
 * Default: nil
 
 
@@ -143,7 +143,7 @@ Laissez `nil` si vous ne voullez pas envoyer de mails.
 ### buddiesAutologins
 
 * Autologins des personnes devant être inscrites à la susie class (en plus de vous). Il s'agit du path et non de l'URL complète.
-* Type: Array
+* Type: Array of strings
 * Default: []
 
 
