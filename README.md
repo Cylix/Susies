@@ -37,8 +37,8 @@ blackListFilters = {
 
 # autologin: intranet authentication
 autologins = {
-  autologinPath:     'https://intra.epitech.eu/my_autologin_url',
-  buddiesAutologins: %w[/buddy_autologin_url],
+  autologinPath:     '/my_autologin_path',
+  buddiesAutologins: %w[/buddy_autologin_path],
 }
 
 # mailInfos: mailer configuration
