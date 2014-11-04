@@ -101,12 +101,6 @@ I've just registered to a susie class.
     type        = filters[:type].nil? || susie.type == filters[:type]
     title       = filters[:title].nil? || susie.title.include?(filters[:title])
 
-    if filters[:logins]
-      filters[:logins].each do |login|
-        login = true if susie.login == login
-      end
-    end
-
     return min_hour && max_hour && login && nb_students && type && title
   end
 
