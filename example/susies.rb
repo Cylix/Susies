@@ -4,10 +4,10 @@ require 'Susies'
 
 # whiteListFilters: susies MUST match these filters
 whiteListFilters = {
-  login:      %w[login_x],
-  maxStudent: 6,
-  minHour:    8,
-  maxHour:    17
+  logins:        %w[login_x],
+  nb_registered: 6,
+  minHour:       8,
+  maxHour:       17
 }
 
 # blackListFilters: susies MUST NOT match these filters
