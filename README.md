@@ -23,10 +23,10 @@ require 'Susies'
 
 # whiteListFilters: susies MUST match these filters
 whiteListFilters = {
-  login:      %w[login_x],
-  maxStudent: 6,
-  minHour:    8,
-  maxHour:    17
+  logins:       %w[login_x],
+  nb_registered: 6,
+  minHour:       8,
+  maxHour:       17
 }
 
 # blackListFilters: susies MUST NOT match these filters
@@ -63,14 +63,14 @@ Les whiteListFilters sont les critères que les susies doivent avoir, à l'inver
 
 Laissez `nil` si vous ne voullez pas de filtres.
 
-### login
+### logins
 
 * Les logins des susies recherchées.
 * Type: Array of strings
 * Default: nil
 
 
-### maxStudent
+### nb_registered
 
 * Nombre d'étudiants déjà inscrit à la susie class (0: personne d'inscrit, 10: plus de places)
 * Type: int
