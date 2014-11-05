@@ -11,6 +11,11 @@ class Susies
     @blackListFilters   = blackListFilters
     @mailInfos          = mailInfos
 
+    @whiteListFilters[:minTime] = Time.parse(@whiteListFilters[:minTime]) if @whiteListFilters[:minTime]
+    @whiteListFilters[:maxTime] = Time.parse(@whiteListFilters[:maxTime]) if @whiteListFilters[:maxTime]
+    @blackListFilters[:minTime] = Time.parse(@blackListFilters[:minTime]) if @blackListFilters[:minTime]
+    @blackListFilters[:maxTime] = Time.parse(@blackListFilters[:maxTime]) if @blackListFilters[:maxTime]
+
     @autologinPath     = autologins[:autologinPath]
     @buddiesAutologins = autologins[:buddiesAutologins] || []
     @requestsManager   = IntraRequestsManager.new
@@ -95,14 +100,14 @@ I've just registered to a susie class.
   def matchCriterias?(susie, filters)
     return true unless filters
 
-    min_hour    = filters[:minHour].nil? || (susie.start.hour >= filters[:minHour])
-    max_hour    = filters[:maxHour].nil? || (susie.end.hour >= filters[:maxHour])
+    min_time    = filters[:minTime].nil? || (susie.start.strftime("%H%M") >= filters[:minTime].strftime("%H%M"))
+    max_time    = filters[:maxTime].nil? || (susie.end.strftime("%H%M") >= filters[:maxTime].strftime("%H%M"))
     nb_students = filters[:nb_registered].nil? || (susie.nb_registered <= filters[:nb_registered])
     login       = filters[:logins].nil? || (filters[:logins].include?(susie.login))
     type        = filters[:type].nil? || (susie.type == filters[:type])
     title       = filters[:title].nil? || (susie.title.include?(filters[:title]))
 
-    min_hour && max_hour && login && nb_students && type && title
+    min_time && max_time && login && nb_students && type && title
   end
 
   

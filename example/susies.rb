@@ -6,8 +6,8 @@ require 'susies'
 whiteListFilters = {
   logins:        %w[login_x],
   nb_registered: 6,
-  minHour:       8,
-  maxHour:       17
+  minTime:       "8:10",
+  maxTime:       "17:42"
 }
 
 # blackListFilters: susies MUST NOT match these filters
