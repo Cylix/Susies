@@ -21,6 +21,11 @@ class Susie
 
 
   def to_s
+    "#{ self.title } (#{ self.type }) by #{ self.login } from #{ self.start } to #{ self.end } (#{ self.nb_registered } people registered)."
+  end
+
+
+  def to_text
     <<-SUSIE
 Login: #{ self.login }
 

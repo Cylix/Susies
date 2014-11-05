@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-require 'Susies'
+require 'susies'
 
 # whiteListFilters: susies MUST match these filters
 whiteListFilters = {

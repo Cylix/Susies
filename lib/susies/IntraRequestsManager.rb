@@ -1,5 +1,5 @@
 # Dependencies
-require 'Susie.rb'
+require 'susies/Susie'
 require 'net/http'
 require 'json'
 
@@ -57,7 +57,7 @@ class IntraRequestsManager
     path = "/planning/#{ @planningID }/#{ susie.id }/subscribe?format=json&registercalendar"
     response = @http.post path, '', { 'Cookie' => @cookies }
 
-    susie.nb_registered -= 1    
+    susie.nb_registered += 1
     susie
   end
 

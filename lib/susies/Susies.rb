@@ -1,8 +1,8 @@
 # Dependencies
 require 'active_support/time'
 require 'net/smtp'
-require 'Susie.rb'
-require 'IntraRequestsManager.rb'
+require 'susies/Susie'
+require 'susies/IntraRequestsManager'
 
 class Susies
 
@@ -47,8 +47,9 @@ class Susies
   def findSusie(susies)
     log "Not already registrated: seeking susies"
     susies.each do |susie|
+      log "Checking criterias of: #{ susie.to_s }"
       if !matchCriterias?(susie, @blackListFilters) && matchCriterias?(susie, @whiteListFilters)
-        log "Find susie matching criterias"
+        log "Find susie matching criterias: #{ susie.to_s }"
         log "Registering to susie"
 	registerSusie  susie
         log "Sending mails"
@@ -74,7 +75,7 @@ Hey,
 
 I've just registered to a susie class.
 
-#{ susie.to_s }
+#{ susie.to_text }
     MESSAGE
   end
 
@@ -94,14 +95,14 @@ I've just registered to a susie class.
   def matchCriterias?(susie, filters)
     return true unless filters
 
-    min_hour    = filters[:minHour].nil? || susie.start.hour >= filters[:minHour]
-    max_hour    = filters[:maxHour].nil? || susie.end.hour >= filters[:maxHour]
-    nb_students = filters[:nb_registered].nil? || susie.nb_registered <= filters[:nb_registered]
-    login       = filters[:logins].nil? || filters[:logins].include?(susie.login)
-    type        = filters[:type].nil? || susie.type == filters[:type]
-    title       = filters[:title].nil? || susie.title.include?(filters[:title])
+    min_hour    = filters[:minHour].nil? || (susie.start.hour >= filters[:minHour])
+    max_hour    = filters[:maxHour].nil? || (susie.end.hour >= filters[:maxHour])
+    nb_students = filters[:nb_registered].nil? || (susie.nb_registered <= filters[:nb_registered])
+    login       = filters[:logins].nil? || (filters[:logins].include?(susie.login))
+    type        = filters[:type].nil? || (susie.type == filters[:type])
+    title       = filters[:title].nil? || (susie.title.include?(filters[:title]))
 
-    return min_hour && max_hour && login && nb_students && type && title
+    min_hour && max_hour && login && nb_students && type && title
   end
 
   
@@ -119,10 +120,7 @@ I've just registered to a susie class.
   
 
   def registeredThisWeek?(susies)
-    susies.each do |susie|
-      return true if susie.is_registered
-    end
-    
+    susies.each { |susie| return true if susie.is_registered }
     false
   end
 
